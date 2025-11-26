@@ -103,6 +103,15 @@ switch(action) {
 						console.log(appearvartoname[trait]+": "+appjson[trait].replace("~", "about ").replace("lbs"," pounds"));
 					});
 				}
+			} else {
+				console.log("File "+args[1]+" does not exist");
+				process.exit()
 			}
+		} else {
+			console.log("Missed argument: Usage: human load [file]")
 		}
+		break;
+	default:
+		console.log("Did not recognize "+args[0])
+		console.log("Mabey try new or load")
 }

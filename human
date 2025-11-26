@@ -1,4 +1,30 @@
 #! /usr/bin/node
+//CONVERSION CHARTS
+monthnumtoname = [
+	"February",
+	"March",
+	"April",
+	"May",
+	"June",
+	"July",
+	"August",
+	"September",
+	"October",
+	"November",
+	"December"
+];
+const genderscitoname = {
+	male: "Boy",
+	female: "Girl"
+};
+const appearvartoname = {
+	"eye-color":"Eye Color",
+	"hair-color": "Hair Color",
+	"hair-style":"Hair Style",
+	"weight":"Weight",
+	"height":"Height"
+};
+
 const fs = require('fs');
 const path = require('path');
 const args = process.argv.splice(2);
@@ -28,6 +54,11 @@ switch(action) {
 	let cont = [];
         let name = args[1];
 	cont.push("name: "+name);
+	id = "";
+	name.split("").forEach(char => {
+		id += char.charCodeAt().toString(16);
+	});
+	cont.push("id: "+id);
 	let birth = (date.getMonth()+1).toString()+"/"+(date.getDate()).toString()+"/"+date.getFullYear();
 	cont.push("birth: "+birth);
 	let gender = args[2];
@@ -54,4 +85,24 @@ switch(action) {
 		process.exit();
 	}
 	break;
+	case 'load':
+		if (args[1]) {
+			if (fs.existsSync(args[1])) {
+				console.log("Loading human from file "+args[1])
+				let nwhum = fs.readFileSync(args[1], "utf8");
+				let jsonhum = nwconfigJSON(nwhum.split("\n"));
+				console.log("Information on "+jsonhum.id)
+				let datelist = jsonhum.birth.split("/");
+				year = datelist[2];
+				console.log(jsonhum.name+" was born on "+monthnumtoname[parseInt(datelist[0])-1] + " "+datelist[1]+", "+year);
+				console.log(jsonhum.name + " is a "+genderscitoname[jsonhum.gender])
+				if (jsonhum.appearence) {
+					console.log("Appearence:")
+					let appjson = JSON.parse(jsonhum.appearence);
+					Object.keys(appjson).forEach(trait => {
+						console.log(appearvartoname[trait]+": "+appjson[trait].replace("~", "about ").replace("lbs"," pounds"));
+					});
+				}
+			}
+		}
 }

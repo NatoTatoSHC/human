@@ -10,6 +10,7 @@ else
     echo Node installed, version $(node -v)
 fi
 echo Installing Script
+sudo rm /usr/bin/human
 sudo cp human /usr/bin/
 sudo chmod +x /usr/bin/human
 echo Completed

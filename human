@@ -94,7 +94,7 @@ switch(action) {
 				console.log("Information on "+jsonhum.id)
 				let datelist = jsonhum.birth.split("/");
 				year = datelist[2];
-				console.log(jsonhum.name+" was born on "+monthnumtoname[parseInt(datelist[0])-1] + " "+datelist[1]+", "+year);
+				console.log(jsonhum.name+" was born on "+monthnumtoname[parseInt(datelist[0])-2] + " "+datelist[1]+", "+year);
 				console.log(jsonhum.name + " is a "+genderscitoname[jsonhum.gender])
 				if (jsonhum.appearence) {
 					console.log("Appearence:")

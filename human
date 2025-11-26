@@ -1,7 +1,7 @@
+#! /usr/bin/node
 const fs = require('fs');
 const path = require('path');
 const args = process.argv.splice(2);
-console.log(process.argv)
 const action = args[0];
 const date = new Date();
 function nwconfigJSON(nw) {
@@ -19,11 +19,11 @@ function nwconfigJSON(nw) {
 }
 switch(action) {
     case 'new':
-	const ad = args.copy();
-	if (ad.splice(1).includes("--help")){
+	
+	/*if (ad.splice(1).includes("--help")){
                 console.log("Usage: human new [name] [gender] <options>\nOptions:\n\t--apearence --- Adds appearence to a person via a .nwconfig file --- --appearence [file]\n\t--birth-override --- Replaces birthdate wirh specified date in mm/dd/yy --- --birth-overide [date]");
 		process.exit();
-        }
+        }*/
 	if (args[1] && args[2]) {
 	let cont = [];
         let name = args[1];

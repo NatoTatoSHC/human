@@ -1,7 +1,57 @@
+const fs = require('fs');
+const path = require('path');
 const args = process.argv.splice(2);
-const action = args[0]
-
+console.log(process.argv)
+const action = args[0];
+const date = new Date();
+function nwconfigJSON(nw) {
+	json = {}
+	keys = []
+	values = []
+	nw.forEach(line => {
+		keys.push(line.split(": ")[0])
+		values.push(line.split(": ")[1])
+	});
+	for (let i = 0; i < nw.length; i++) {
+		json[keys[i]] = values[i];
+	}
+	return json;
+}
 switch(action) {
     case 'new':
-        let name = args[1]
+	const ad = args.copy();
+	if (ad.splice(1).includes("--help")){
+                console.log("Usage: human new [name] [gender] <options>\nOptions:\n\t--apearence --- Adds appearence to a person via a .nwconfig file --- --appearence [file]\n\t--birth-override --- Replaces birthdate wirh specified date in mm/dd/yy --- --birth-overide [date]");
+		process.exit();
+        }
+	if (args[1] && args[2]) {
+	let cont = [];
+        let name = args[1];
+	cont.push("name: "+name);
+	let birth = (date.getMonth()+1).toString()+"/"+(date.getDate()).toString()+"/"+date.getFullYear();
+	cont.push("birth: "+birth);
+	let gender = args[2];
+	if (!["male", "female"].includes(gender)) {console.log(gender+" is not a gender");process.exit()}
+	cont.push("gender: "+gender);
+	const opts = args.splice(3);
+	if (opts.includes("--appearence")) {
+		let app = opts[opts.indexOf("--appearence") + 1]
+		console.log("Loading Appearence from: "+app);
+		if (!fs.existsSync(app)) {console.log("File "+app+" does not exist");process.exit()}
+		let appearence = nwconfigJSON(fs.readFileSync(app,"utf8").split("\n"))
+		cont.push("appearence: "+JSON.stringify(appearence));
+	}
+	if (opts.includes("--birth-override")) {
+		let birex = /^\d{1,2}\/\d{1,2}\/\d{1,2}$/
+		let bir = opts[opts.indexOf("--birth-override") + 1]
+		if (!birex.test(bir)) {console.log(bir+" is not a date");process.exit()}
+		cont[1] = "birth: "+bir;
+	}
+	console.log("writing to "+ name + ".human");
+	fs.writeFileSync(name+".human", cont.join("\n"))
+	} else {
+		console.log("Arguments required: human new [name] [gender] <options>");
+		process.exit();
+	}
+	break;
 }
